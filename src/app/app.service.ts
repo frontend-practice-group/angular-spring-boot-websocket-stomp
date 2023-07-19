@@ -13,18 +13,25 @@ export class AppService {
   stompClient: any
   topic: string = "/topic/greetings";
   responseSubject = new Subject<Greeting>()
-  webSocketEndPoint: string = 'http://localhost:5555/ws';
+  webSocketEndPoint: string = 'http://localhost:8080/ws';
 
   connect() {
     console.log("Initialize WebSocket Connection");
     let ws = SockJS(this.webSocketEndPoint);
     this.stompClient = Stomp.over(ws);
-    const _this = this;
-    _this.stompClient.connect({}, function (frame: any) {
-      _this.stompClient.subscribe(_this.topic, function (greetingResponse: any) {
-        _this.onMessageReceived(greetingResponse);
+    const _this = this; //?
+    this.stompClient.connect({}, (frame: any) => {
+      console.log('::connect frame', frame);
+      this.stompClient.subscribe(this.topic, (greetingResponse: any) => {
+        console.log('::subscribe greetingResponse', this.topic, greetingResponse);
+        this.onMessageReceived(greetingResponse);
       });
-    }, this.errorCallBack);
+    }, this.errorCallBack)
+    // _this.stompClient.connect({}, function (frame: any) {
+    //   _this.stompClient.subscribe(_this.topic, function (greetingResponse: any) {
+    //     _this.onMessageReceived(greetingResponse);
+    //   });
+    // }, this.errorCallBack);
   };
 
   disconnect() {

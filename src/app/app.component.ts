@@ -23,9 +23,14 @@ export class AppComponent {
   }
 
   connect() {
-    this.appService.connect()
-    this.connectButtonDisabled = true
-    this.disconnectButtonDisabled = false
+    if (this.name !== '') {
+      console.log('::connect btn clicked', this.name);
+      this.appService.connect();
+      this.connectButtonDisabled = true
+      this.disconnectButtonDisabled = false
+    } else {
+      console.log('::connect no name entered');
+    }
   }
 
   disconnect() {
